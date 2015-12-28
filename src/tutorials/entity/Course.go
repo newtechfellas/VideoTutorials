@@ -9,7 +9,7 @@ type Course struct {
 	Technology string  `valid:"Required;"` //Hibernate, Wicket, JSP , Java etc
 	Keywords   []string `valid:"Required;MinSize(1);"`//java/.Net/SQL/python etc
 	User       string   `valid:"Required;"` //uploaded by
-	Lectures   []*Lecture `valid:"Required;MinSize(1);"`
+	Lectures   []Lecture `valid:"Required;MinSize(1);"`
 }
 
 func (f *Course) String() string {
