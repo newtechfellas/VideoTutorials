@@ -26,3 +26,11 @@ func DecodeAndValidate(w http.ResponseWriter, r *http.Request, obj interface{}) 
 	}
 	return
 }
+
+func Jsonify(obj interface{}) string {
+	b, err := json.Marshal(obj)
+	if err != nil {
+		return ""
+	}
+	return string(b)
+}

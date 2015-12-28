@@ -1,6 +1,6 @@
 package entity
 import (
-	"encoding/json"
+	"tutorials"
 )
 
 type Lecture struct {
@@ -13,9 +13,5 @@ type Lecture struct {
 }
 
 func (f *Lecture) String() string {
-	b, err := json.Marshal(f)
-	if err != nil {
-		return ""
-	}
-	return string(b[:])
+	return tutorials.Jsonify(f)
 }
