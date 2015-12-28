@@ -6,13 +6,14 @@ import (
 	"bytes"
 	"log"
 	"fmt"
+	"errors"
 )
 
 
 func DecodeAndValidate(w http.ResponseWriter, r *http.Request, obj interface{}) (err error) {
 	decoder := json.NewDecoder(r.Body)
 	if err = decoder.Decode(obj); err != nil {
-		http.Error(w, "Invalid json details in request body", http.StatusBadRequest)
+		ErrorResponse(w, errors.New("Invalid json details in request body"), http.StatusBadRequest)
 		return
 	}
 	log.Println("decoded object type and value:", fmt.Sprintf("%T", obj), obj)
@@ -22,12 +23,11 @@ func DecodeAndValidate(w http.ResponseWriter, r *http.Request, obj interface{}) 
 		var buffer bytes.Buffer
 		if valid.HasErrors() {
 			for _, err := range valid.Errors {
-				buffer.WriteString(err.Field + " " + err.Message + ".\t")
+				buffer.WriteString(err.Field + " " + err.Message + ".")
 			}
 		}
-		http.Error(w, buffer.String(), http.StatusBadRequest)
+		ErrorResponse(w, errors.New(buffer.String()), http.StatusBadRequest)
 	}
-
 	return
 }
 
@@ -45,6 +45,17 @@ func JsonResponse(w http.ResponseWriter, v interface{}, headers map[string]strin
 		fmt.Fprintf(w, "%s", string(b[:]))
 	}
 }
+
+func ErrorResponse(w http.ResponseWriter, err error, statusCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	b, _ := json.Marshal(map[string]interface{}{
+		"message": err.Error(),
+	})
+	log.Println("Sending error response for \"" + err.Error() + "\" error")
+	fmt.Fprintf(w, "%s", string(b[:]))
+}
+
 
 
 func Jsonify(obj interface{}) string {
