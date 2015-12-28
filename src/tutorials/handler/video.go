@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"tutorials"
 	"tutorials/entity"
-	"log"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/datastore"
+	"time"
 )
 
 func init() {
@@ -22,5 +24,12 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	if err := tutorials.DecodeAndValidate(w, r, &c); err != nil {
 		return //http response is already handled by validateCourseFromPost
 	}
-	log.Println(&c)
+	c.Date = time.Now()
+	ctx := appengine.NewContext(r)
+	_, err := datastore.Put(ctx, datastore.NewIncompleteKey(ctx, "Course", nil), &c)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	tutorials.JsonResponse(w, nil, nil, http.StatusAccepted)
 }
