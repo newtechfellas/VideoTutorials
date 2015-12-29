@@ -21,26 +21,26 @@ func Router() *mux.Router {
 func init() {
 	r := Router()
 	r.HandleFunc("/", rootHandler)
-	r.HandleFunc("/videos", VideoHandler).Methods("GET")
-	r.HandleFunc("/NewVideo", Create).Methods("POST")
+	r.HandleFunc("/search", Search).Methods("GET")
+	r.HandleFunc("/NewCourse", CreateCourse).Methods("POST")
 }
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Hello, world!")
 }
 
-func VideoHandler(w http.ResponseWriter, r *http.Request) {
+func Search(w http.ResponseWriter, r *http.Request) {
 	var course []Course
-	var err error
 	ctx := appengine.NewContext(r)
-	if err = GetAllCourses(ctx, &course); err != nil {
-		ErrorResponse(w, errors.New("Did not find any courses"), http.StatusNotFound)
+	course = GetCoursesFromCache(ctx)
+	if course == nil || len(course) == 0 {
+		ErrorResponse(w, errors.New("Courses not found"), http.StatusNotFound)
 		return
 	}
 	JsonResponse(w, course, nil, http.StatusOK)
 }
 
-func Create(w http.ResponseWriter, r *http.Request) {
+func CreateCourse(w http.ResponseWriter, r *http.Request) {
 	var c Course
 	if err := DecodeAndValidate(w, r, &c); err != nil {
 		return //http response is already handled by DecodeAndValidate

@@ -14,6 +14,7 @@ func CreateOrUpdate(ctx context.Context, obj interface{}, kind string) error {
 	return nil
 }
 
+
 func GetAllCourses(ctx context.Context, course *[]Course) error {
 	q := datastore.NewQuery("Course").Order("-Date")
 	if _, err := q.GetAll(ctx, course); err != nil {

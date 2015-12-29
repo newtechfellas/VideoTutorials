@@ -2,10 +2,12 @@ application: videotutorials
 version: 1
 runtime: go
 api_version: go1
-
+env_variables:
+  CACHE_EXPIRY_MINUTES: 120
 handlers:
 - url: /videos
   script: _go_app
 
 - url: /.*
   script: _go_app
+
