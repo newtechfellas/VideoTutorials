@@ -6,8 +6,8 @@ import (
 	"time"
 	"errors"
 	"github.com/gorilla/mux"
-	"fmt"
 	"log"
+	"html/template"
 )
 
 var rootRouter *mux.Router = nil
@@ -27,8 +27,14 @@ func init() {
 	r.HandleFunc("/NewCourse", CreateCourse).Methods("POST")
 }
 
+var homeTemplate  = template.Must(template.ParseFiles("templates/index.html"))
+
 func rootHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello, world!")
+//	fmt.Fprint(w, "Hello, world!")
+	err := homeTemplate.Execute(w, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func Search(w http.ResponseWriter, r *http.Request) {

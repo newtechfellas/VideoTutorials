@@ -4,6 +4,7 @@ import (
 )
 
 type Course struct {
+	ImageUrl   string `valid:"Required;"`                           //Image Url to be displayed when the course is shown on the Home page or search results
 	Title      string `valid:"Required;"`
 	Rating     int32
 	Technology string  `valid:"Required;"`                          //Hibernate, Wicket, JSP , Java etc
