@@ -51,3 +51,23 @@ func LoadCoursesToCache(ctx context.Context) {
 	CACHE.cachedTime = time.Now()
 	CACHE.courses = courses
 }
+
+func AddToCache(course Course) {
+	var updated bool = false
+	//if the cache does not have the element already, append it. Else update the existing slot
+	inputCourseTime := course.Date.Unix()
+	for index, item := range CACHE.courses {
+		if item.Date.Unix() ==  inputCourseTime {
+			CACHE.courses[index] = course
+			updated = true
+		}
+	}
+	if !updated {
+		CACHE.courses = append(CACHE.courses, course)
+	}
+	CACHE.cachedTime = time.Now()
+}
+
+func PurgeCache() {
+	CACHE.courses = nil //garbage collected
+}

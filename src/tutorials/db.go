@@ -5,15 +5,14 @@ import (
 	"log"
 )
 
-func CreateOrUpdate(ctx context.Context, obj interface{}, kind string) error {
-	_, err := datastore.Put(ctx, datastore.NewIncompleteKey(ctx, kind, nil), obj)
+func CreateOrUpdate(ctx context.Context, obj interface{}, kind string, numericID int64) error {
+	_, err := datastore.Put(ctx,datastore.NewKey(ctx, kind, "", numericID, nil), obj)
 	if err != nil {
 		log.Println("Failed to save object to datastore for kind:", kind)
 		return err
 	}
 	return nil
 }
-
 
 func GetAllCourses(ctx context.Context, course *[]Course) error {
 	q := datastore.NewQuery("Course").Order("-Date")

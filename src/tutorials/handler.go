@@ -45,12 +45,15 @@ func CreateCourse(w http.ResponseWriter, r *http.Request) {
 	if err := DecodeAndValidate(w, r, &c); err != nil {
 		return //http response is already handled by DecodeAndValidate
 	}
-	c.Date = time.Now()
+	if c.Date.IsZero() {
+		c.Date = time.Now()
+	} else {
+	}
 	ctx := appengine.NewContext(r)
-
-	if err := CreateOrUpdate(ctx, &c, "Course"); err != nil {
+	if err := CreateOrUpdate(ctx, &c, "Course", c.Date.Unix()); err != nil {
 		ErrorResponse(w, err, http.StatusInternalServerError)
 		return
 	}
+	AddToCache(c) //update the cache
 	JsonResponse(w, nil, nil, http.StatusAccepted)
 }
