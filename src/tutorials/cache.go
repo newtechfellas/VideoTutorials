@@ -9,6 +9,7 @@ import (
 
 // Although packages exist for cache in Go, below cache implementation is purely local and simple usage
 // for app engine usage
+// On a second thought, this cache implementation may be overkill. App engine's memcache might suffice???
 
 type CourseCache struct {
 	courses    []Course

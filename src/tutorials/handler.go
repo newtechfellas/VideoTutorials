@@ -7,6 +7,7 @@ import (
 	"errors"
 	"github.com/gorilla/mux"
 	"fmt"
+	"log"
 )
 
 var rootRouter *mux.Router = nil
@@ -21,6 +22,7 @@ func Router() *mux.Router {
 func init() {
 	r := Router()
 	r.HandleFunc("/", rootHandler)
+	r.HandleFunc("/refreshCache", RefreshCache).Methods("POST")
 	r.HandleFunc("/search", Search).Methods("GET")
 	r.HandleFunc("/NewCourse", CreateCourse).Methods("POST")
 }
@@ -56,4 +58,12 @@ func CreateCourse(w http.ResponseWriter, r *http.Request) {
 	}
 	AddToCache(c) //update the cache
 	JsonResponse(w, nil, nil, http.StatusAccepted)
+}
+
+
+func RefreshCache(w http.ResponseWriter, r *http.Request) {
+	PurgeCache()
+	ctx := appengine.NewContext(r)
+	LoadCoursesToCache(ctx)
+	log.Println("Cache reloaded")
 }
