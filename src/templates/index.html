@@ -74,10 +74,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <img class="img-responsive" src="img/profile.png" alt="">
                     <div class="intro-text">
-                        <form novalidate="" id="searchForm" name="sentMessage">
+                        <div novalidate="" id="searchForm" name="sentMessage">
+                            <div class="input-group input-group-unstyled"></div>
                             <input type="text" data-validation-required-message="Please enter your name." required="" id="name" placeholder="Search technology" class="form-control" aria-invalid="false">
+                            <span class="input-group-addon">
+                                <i class="fa fa-search"></i>
+                            </span>
+                            </div>
                             <div class="row name">
                                 <div class="form-group col-xs-12">
                                     <button type="submit" class="btn btn-success btn-lg">Search</button>

@@ -10,19 +10,21 @@ import (
 	"html/template"
 )
 
+var homeTemplate *template.Template
 func init() {
+	log.Println("Inside handler's init")
 	r := mux.NewRouter()
 	http.Handle("/", r)
 	r.HandleFunc("/", rootHandler)
 	r.HandleFunc("/refreshCache", RefreshCache).Methods("POST")
 	r.HandleFunc("/search", Search).Methods("GET")
 	r.HandleFunc("/newCourse", CreateCourse).Methods("POST")
+	homeTemplate = template.Must(template.ParseFiles("templates/base.html", "templates/contact.html",
+		"templates/homePageHeader.html", "templates/homePageMainContent.html", "templates/navbarLinks.html"))
 }
 
-var homeTemplate  = template.Must(template.ParseFiles("templates/index.html"))
-
 func rootHandler(w http.ResponseWriter, r *http.Request) {
-	err := homeTemplate.Execute(w, nil)
+	err := homeTemplate.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -42,11 +44,10 @@ func Search(w http.ResponseWriter, r *http.Request) {
 func CreateCourse(w http.ResponseWriter, r *http.Request) {
 	var c Course
 	if err := DecodeAndValidate(w, r, &c); err != nil {
-			return //http response is already handled by DecodeAndValidate
+		return //http response is already handled by DecodeAndValidate
 	}
 	if c.Date.IsZero() {
 		c.Date = time.Now()
-	} else {
 	}
 	ctx := appengine.NewContext(r)
 	if err := CreateOrUpdate(ctx, &c, "Course", c.Date.Unix()); err != nil {
