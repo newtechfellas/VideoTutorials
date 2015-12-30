@@ -10,27 +10,18 @@ import (
 	"html/template"
 )
 
-var rootRouter *mux.Router = nil
-func Router() *mux.Router {
-	if rootRouter == nil {
-		rootRouter = mux.NewRouter()
-		http.Handle("/", rootRouter)
-	}
-	return rootRouter
-}
-
 func init() {
-	r := Router()
+	r := mux.NewRouter()
+	http.Handle("/", r)
 	r.HandleFunc("/", rootHandler)
 	r.HandleFunc("/refreshCache", RefreshCache).Methods("POST")
 	r.HandleFunc("/search", Search).Methods("GET")
-	r.HandleFunc("/NewCourse", CreateCourse).Methods("POST")
+	r.HandleFunc("/newCourse", CreateCourse).Methods("POST")
 }
 
 var homeTemplate  = template.Must(template.ParseFiles("templates/index.html"))
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
-//	fmt.Fprint(w, "Hello, world!")
 	err := homeTemplate.Execute(w, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -51,7 +42,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 func CreateCourse(w http.ResponseWriter, r *http.Request) {
 	var c Course
 	if err := DecodeAndValidate(w, r, &c); err != nil {
-		return //http response is already handled by DecodeAndValidate
+			return //http response is already handled by DecodeAndValidate
 	}
 	if c.Date.IsZero() {
 		c.Date = time.Now()

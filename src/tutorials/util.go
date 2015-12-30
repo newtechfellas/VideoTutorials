@@ -9,10 +9,10 @@ import (
 	"errors"
 )
 
-
 func DecodeAndValidate(w http.ResponseWriter, r *http.Request, obj interface{}) (err error) {
 	decoder := json.NewDecoder(r.Body)
 	if err = decoder.Decode(obj); err != nil {
+		log.Println("Error in decoding request body. Error is ", err)
 		ErrorResponse(w, errors.New("Invalid json details in request body"), http.StatusBadRequest)
 		return
 	}
@@ -22,11 +22,12 @@ func DecodeAndValidate(w http.ResponseWriter, r *http.Request, obj interface{}) 
 	if b, err = valid.RecursiveValid(obj); err != nil || !b {
 		var buffer bytes.Buffer
 		if valid.HasErrors() {
-			for _, err := range valid.Errors {
-				buffer.WriteString(err.Field + " " + err.Message + ".")
+			for _, validationErr := range valid.Errors {
+				buffer.WriteString(validationErr.Field + " " + validationErr.Message + ".")
 			}
 		}
-		ErrorResponse(w, errors.New(buffer.String()), http.StatusBadRequest)
+		err = errors.New(buffer.String())
+		ErrorResponse(w, err, http.StatusBadRequest)
 	}
 	return
 }
@@ -37,9 +38,7 @@ func JsonResponse(w http.ResponseWriter, v interface{}, headers map[string]strin
 	for k, v := range headers {
 		w.Header().Set(k, v)
 	}
-
 	w.WriteHeader(statusCode)
-
 	if v != nil {
 		b, _ := json.Marshal(v)
 		fmt.Fprintf(w, "%s", string(b[:]))
@@ -55,8 +54,6 @@ func ErrorResponse(w http.ResponseWriter, err error, statusCode int) {
 	log.Println("Sending error response for \"" + err.Error() + "\" error")
 	fmt.Fprintf(w, "%s", string(b[:]))
 }
-
-
 
 func Jsonify(obj interface{}) string {
 	b, err := json.Marshal(obj)

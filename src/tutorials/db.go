@@ -8,7 +8,7 @@ import (
 func CreateOrUpdate(ctx context.Context, obj interface{}, kind string, numericID int64) error {
 	_, err := datastore.Put(ctx,datastore.NewKey(ctx, kind, "", numericID, nil), obj)
 	if err != nil {
-		log.Println("Failed to save object to datastore for kind:", kind)
+		log.Println("Failed to save object to datastore for kind:", kind, err)
 		return err
 	}
 	return nil
