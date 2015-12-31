@@ -58,7 +58,7 @@ func AddToCache(course Course) {
 	var updated bool = false
 	//if the cache does not have the element already, append it. Else update the existing slot
 	for index, item := range CACHE.courses {
-		if item.Id ==  course.Id {
+		if item.Id == course.Id {
 			CACHE.courses[index] = course
 			updated = true
 		}
