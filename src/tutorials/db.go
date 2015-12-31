@@ -1,4 +1,5 @@
 package tutorials
+
 import (
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
@@ -13,7 +14,6 @@ func CreateOrUpdate(ctx context.Context, obj interface{}, kind string, numericID
 	}
 	return nil
 }
-
 
 func GetEntity(ctx context.Context, id int64, kind string, entity interface{}) (err error) {
 	if err = datastore.Get(ctx, datastore.NewKey(ctx, kind, "", id, nil), entity); err != nil {

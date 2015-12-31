@@ -1,10 +1,11 @@
 package tutorials
+
 import (
-	"time"
-	"os"
-	"log"
 	"golang.org/x/net/context"
+	"log"
+	"os"
 	"strconv"
+	"time"
 )
 
 // Although packages exist for cache in Go, below cache implementation is purely local and simple usage
@@ -17,8 +18,9 @@ type CourseCache struct {
 }
 
 var cacheExpiryInMin int
-func loadCacheAllowedMinutes() (int) {
-	if ( cacheExpiryInMin == 0 ) {
+
+func loadCacheAllowedMinutes() int {
+	if cacheExpiryInMin == 0 {
 		cacheExpiryInMin = 24 * 60 //24 hours default
 		if v := os.Getenv("CACHE_EXPIRY_MINUTES"); v != "" {
 			log.Println("CACHE_EXPIRY_MINUTES = ", v)
@@ -30,12 +32,12 @@ func loadCacheAllowedMinutes() (int) {
 	return cacheExpiryInMin
 }
 
-var CACHE CourseCache = CourseCache{cachedTime : time.Now() }//global cache for courses
+var CACHE CourseCache = CourseCache{cachedTime: time.Now()} //global cache for courses
 
 //return the courses from cache if available and within allowed expiry.
 func GetCoursesFromCache(ctx context.Context) []Course {
 	hoursSinceCached := int(time.Now().Sub(CACHE.cachedTime).Hours())
-	if ( len(CACHE.courses) > 0 &&  hoursSinceCached <= loadCacheAllowedMinutes()) {
+	if len(CACHE.courses) > 0 && hoursSinceCached <= loadCacheAllowedMinutes() {
 		log.Println("Returning cached courses count = ", len(CACHE.courses))
 		return CACHE.courses
 	}

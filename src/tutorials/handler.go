@@ -1,17 +1,18 @@
 package tutorials
 
 import (
-	"net/http"
-	"google.golang.org/appengine"
-	"time"
 	"errors"
 	"github.com/gorilla/mux"
-	"log"
+	"google.golang.org/appengine"
 	"html/template"
+	"log"
+	"net/http"
 	"strconv"
+	"time"
 )
 
 var homeTemplate *template.Template
+
 func init() {
 	log.Println("Inside handler's init")
 	r := mux.NewRouter()
@@ -97,7 +98,7 @@ func updateCourseForLectureUpdate(operation string, w http.ResponseWriter, r *ht
 		if item.Link == l.Link {
 			if operation == "delete" {
 				log.Println("Deleting lecture from course")
-				c.Lectures = append(c.Lectures[:index], c.Lectures[index + 1:]...)
+				c.Lectures = append(c.Lectures[:index], c.Lectures[index+1:]...)
 			}
 			if operation == "add" {
 				log.Println("This lecture is already part of the course. Updating")

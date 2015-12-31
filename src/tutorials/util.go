@@ -1,12 +1,13 @@
 package tutorials
+
 import (
-	"net/http"
-	"encoding/json"
-	"github.com/astaxie/beego/validation"
 	"bytes"
-	"log"
-	"fmt"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"github.com/astaxie/beego/validation"
+	"log"
+	"net/http"
 )
 
 func DecodeAndValidate(w http.ResponseWriter, r *http.Request, obj interface{}) (err error) {
