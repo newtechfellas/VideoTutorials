@@ -50,15 +50,15 @@ func LoadCoursesToCache(ctx context.Context) {
 		log.Println("ERROR in loading courses from datastore. Can not cache the values")
 	}
 	CACHE.cachedTime = time.Now()
+	log.Println("Cache = ", courses)
 	CACHE.courses = courses
 }
 
 func AddToCache(course Course) {
 	var updated bool = false
 	//if the cache does not have the element already, append it. Else update the existing slot
-	inputCourseTime := course.Date.Unix()
 	for index, item := range CACHE.courses {
-		if item.Date.Unix() ==  inputCourseTime {
+		if item.Id ==  course.Id {
 			CACHE.courses[index] = course
 			updated = true
 		}
@@ -69,6 +69,11 @@ func AddToCache(course Course) {
 	CACHE.cachedTime = time.Now()
 }
 
+func RefreshCourseCache(ctx context.Context) {
+	PurgeCache()
+	LoadCoursesToCache(ctx)
+	log.Println("Cache reloaded")
+}
 func PurgeCache() {
 	CACHE.courses = nil //garbage collected
 }

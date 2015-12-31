@@ -89,6 +89,17 @@ header {
     height: auto;
 }
 
+.home-splash .splash_message {
+    margin: 0;
+    color: #fff;
+    font-size: 35px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 1.3px;
+    padding-bottom: 25px;
+    text-transform: none;
+}
+
 .btn-round {
     border-radius: 0 8px 8px 0;
 }
