@@ -3,4 +3,4 @@
 .project
 .settings
 .settings/*
-src/tutorials/youtubeapikey.go
+src/tutorials/secrets.go

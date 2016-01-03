@@ -3,16 +3,27 @@ package tutorials
 import (
 	"code.google.com/p/google-api-go-client/googleapi/transport"
 	"code.google.com/p/google-api-go-client/youtube/v3"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/urlfetch"
 	"log"
 	"net/http"
 )
 
-var service *youtube.Service
+func AddPlaylistVideosAsCourse(w http.ResponseWriter, r *http.Request) {
+	//TODO: Add security check. This API must be secured using a key
+	if err := isTrustedReq(w, r); err != nil {
+		return //response already handled by isTrustedReq
+	}
 
-func init() {
+	var service *youtube.Service
+	ctx := appengine.NewContext(r)
+
+	transport := &transport.APIKey{
+		Key:       apiKey,
+		Transport: &urlfetch.Transport{Context: ctx}}
+	client := &http.Client{Transport: transport}
+
 	var err error
-	log.Println("Apikey = ", apiKey)
-	client := &http.Client{Transport: &transport.APIKey{Key: apiKey}}
 	service, err = youtube.New(client)
 	if err != nil {
 		log.Println("ERROR in creating youtube New client ", err)

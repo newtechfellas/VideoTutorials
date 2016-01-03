@@ -30,9 +30,7 @@ func GetAllCourses(ctx context.Context, course *[]Course) error {
 	}
 	//sort the lectures in ascending order
 	for _, c := range *course {
-		log.Println("before sorting ", c.Lectures)
 		sort.Sort(ByOrder(c.Lectures))
-		log.Println("after sorting ", c.Lectures)
 	}
 	return nil
 }

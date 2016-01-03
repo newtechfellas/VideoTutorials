@@ -46,14 +46,30 @@ func JsonResponse(w http.ResponseWriter, v interface{}, headers map[string]strin
 	}
 }
 
+func isTrustedReq(w http.ResponseWriter, r *http.Request) error {
+	var key string
+	if key = r.Header.Get("X-ADMIN-KEY"); len(key) <= 0 {
+		ErrorResponse(w, nil, http.StatusUnauthorized)
+		return errors.New("AdminKey header missing")
+	}
+	if key != adminKey {
+		log.Println("Invalid admin key header:", key)
+		ErrorResponse(w, nil, http.StatusUnauthorized)
+		return errors.New("Invalid AdminKey value")
+	}
+	return nil
+}
+
 func ErrorResponse(w http.ResponseWriter, err error, statusCode int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	b, _ := json.Marshal(map[string]interface{}{
-		"message": err.Error(),
-	})
-	log.Println("Sending error response for \"" + err.Error() + "\" error")
-	fmt.Fprintf(w, "%s", string(b[:]))
+	if err != nil {
+		b, _ := json.Marshal(map[string]interface{}{
+			"message": err.Error(),
+		})
+		log.Println("Sending error response for \"" + err.Error() + "\" error")
+		fmt.Fprintf(w, "%s", string(b[:]))
+	}
 }
 
 func Jsonify(obj interface{}) string {

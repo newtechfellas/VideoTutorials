@@ -21,6 +21,7 @@ func init() {
 	r.HandleFunc("/refreshCache", RefreshCache).Methods("POST")
 	r.HandleFunc("/search", Search).Methods("GET")
 	r.HandleFunc("/newCourse", CreateOrUpdateCourse).Methods("POST")
+	r.HandleFunc("/playlistAsCourse", AddPlaylistVideosAsCourse).Methods("POST")
 	r.HandleFunc("/addLecture/{courseId:[0-9]+}", AddLecture).Methods("PUT")
 	r.HandleFunc("/deleteLecture/{courseId:[0-9]+}", DeleteLecture).Methods("PUT")
 	homeTemplate = template.Must(template.ParseFiles("templates/base.html", "templates/contact.html",

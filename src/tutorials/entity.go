@@ -25,7 +25,7 @@ type PlatformImageUrls struct {
 }
 
 type Lecture struct {
-	Order int    `valid:"Required;"` //sequence order of the video in the course
+	Order      int    `valid:"Required;"` //sequence order of the video in the course
 	Title      string `valid:"Required;"`
 	Provider   string `valid:"Required;"` //youtube/vimeo/infoq etc
 	ImageUrl   string //image links of various resolutions (mobile, tablet, desktop). For now using one image
@@ -34,7 +34,7 @@ type Lecture struct {
 	EmbedLink  string
 }
 
-//Implement sort interface for Lecture so that we can sort them by asceneding order of sequence order
+//Implement sort interface for Lecture so that we can sort them by ascending order of sequence order
 type ByOrder []Lecture
 
 func (l ByOrder) Len() int           { return len(l) }
