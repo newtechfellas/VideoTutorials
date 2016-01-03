@@ -25,6 +25,7 @@ type PlatformImageUrls struct {
 }
 
 type Lecture struct {
+	Order int    `valid:"Required;"` //sequence order of the video in the course
 	Title      string `valid:"Required;"`
 	Provider   string `valid:"Required;"` //youtube/vimeo/infoq etc
 	ImageUrl   string //image links of various resolutions (mobile, tablet, desktop). For now using one image
@@ -33,10 +34,13 @@ type Lecture struct {
 	EmbedLink  string
 }
 
-func (f Lecture) String() string {
-	return Jsonify(f)
-}
+//Implement sort interface for Lecture so that we can sort them by asceneding order of sequence order
+type ByOrder []Lecture
 
-func (f Course) String() string {
-	return Jsonify(f)
-}
+func (l ByOrder) Len() int           { return len(l) }
+func (a ByOrder) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByOrder) Less(i, j int) bool { return a[i].Order < a[j].Order }
+
+func (f Lecture) String() string { return Jsonify(f) }
+
+func (f Course) String() string { return Jsonify(f) }

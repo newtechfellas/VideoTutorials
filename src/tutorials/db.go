@@ -4,6 +4,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
 	"log"
+	"sort"
 )
 
 func CreateOrUpdate(ctx context.Context, obj interface{}, kind string, numericID int64) error {
@@ -26,6 +27,12 @@ func GetAllCourses(ctx context.Context, course *[]Course) error {
 	q := datastore.NewQuery("Course").Order("-Views") //sort to have the most viewed courses at the top
 	if _, err := q.GetAll(ctx, course); err != nil {
 		return err
+	}
+	//sort the lectures in ascending order
+	for _, c := range *course {
+		log.Println("before sorting ", c.Lectures)
+		sort.Sort(ByOrder(c.Lectures))
+		log.Println("after sorting ", c.Lectures)
 	}
 	return nil
 }
