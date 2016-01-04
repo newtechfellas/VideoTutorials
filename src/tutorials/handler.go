@@ -14,7 +14,6 @@ import (
 var homeTemplate *template.Template
 
 func init() {
-	log.Println("Inside handler's init")
 	r := mux.NewRouter()
 	http.Handle("/", r)
 	r.HandleFunc("/", rootHandler)
