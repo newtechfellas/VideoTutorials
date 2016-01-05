@@ -32,6 +32,7 @@ type Lecture struct {
 	Link       string `valid:"Required;"`
 	Embeddable bool   //can the video be embedded in the same page?
 	EmbedLink  string
+	Duration   string
 }
 
 //Implement sort interface for Lecture so that we can sort them by ascending order of sequence order

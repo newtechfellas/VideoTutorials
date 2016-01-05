@@ -143,6 +143,7 @@ header .intro-text .skills {
     background: rgba(0, 0, 0, 0.75);
     padding: 50px 60px;
     margin-top: 50px;
+    padding-bottom: 90px;
 }
 @media(min-width:768px) {
     header .container {
